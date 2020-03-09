@@ -1,0 +1,34 @@
+{
+  "name": "seneca-extend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamcc/seneca-extend.git"
+  },
+  "keywords": [
+    "seneca",
+    "jaeger",
+    "tracing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamcc/seneca-extend/issues"
+  },
+  "homepage": "https://github.com/iamcc/seneca-extend#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "bunyan": "^1.8.12",
+    "debug": "^4.1.1",
+    "jaeger-client": "^3.17.2",
+    "seneca": "^3.20.1"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
+}
