@@ -31,17 +31,12 @@ test('seneca response', async done => {
   const resp = await seneca.actAsync('role:test,cmd:fnOne', {
     msg: 'ok'
   });
-  expect(resp).toEqual({
-    error_code: 0,
-    error_msg: 'SUCCESS',
-    data: { msg: 'ok' }
-  });
+  expect(resp).toEqual({ msg: 'ok' });
   done();
 });
 
 test('handle error', async done => {
-  const seneca = Seneca({ log: 'test' }).test(err => {
-    expect(err.details.message).toBe('error');
+  const seneca = Seneca({ log: 'test' }).test(() => {
     done();
   });
   seneca.use(function() {
@@ -53,14 +48,39 @@ test('handle error', async done => {
     });
   });
 
-  const resp = await seneca.actAsync('role:test,cmd:throwAppError');
-  expect(resp).toEqual({ error_code: -1, error_msg: 'error' });
+  try {
+    await seneca.actAsync('role:test,cmd:throwAppError');
+  } catch (e) {
+    expect(e.name).toBe('AppError');
+    expect(e.message).toBe('error');
+  }
 
-  seneca.act('role:test,cmd:throwError');
+  try {
+    await seneca.actAsync('role:test,cmd:throwError');
+  } catch (e) {
+    expect(e.details.message).toBe('error');
+  }
 });
 
 test('addAsync().act is a function', () => {
-  expect(typeof Seneca({}).addAsync('test', function test() {}).act).toBe(
-    'function'
-  );
+  expect(
+    typeof Seneca({ log: 'test' }).addAsync('test', function test() {}).act
+  ).toBe('function');
+});
+
+test('actAsync', done => {
+  Seneca({ log: 'test' })
+    .test(() => done())
+    .addAsync('test', function getSuccess() {
+      return { error_code: 0, data: true };
+    })
+    .addAsync('test', function getFailed() {
+      return { error_code: -1, error_msg: 'fake error' };
+    })
+    .ready(async function() {
+      const succData = await this.actAsync('role:test,cmd:getSuccess');
+      expect(succData).toBe(true);
+
+      done();
+    });
 });
