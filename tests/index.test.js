@@ -58,3 +58,9 @@ test('handle error', async done => {
 
   seneca.act('role:test,cmd:throwError');
 });
+
+test('addAsync().act is a function', () => {
+  expect(typeof Seneca({}).addAsync('test', function test() {}).act).toBe(
+    'function'
+  );
+});
