@@ -51,14 +51,13 @@ test('handle error', async done => {
   try {
     await seneca.actAsync('role:test,cmd:throwAppError');
   } catch (e) {
-    expect(e.name).toBe('AppError');
-    expect(e.message).toBe('error');
+    expect(e).toEqual(new AppError('error'));
   }
 
   try {
     await seneca.actAsync('role:test,cmd:throwError');
   } catch (e) {
-    expect(e.details.message).toBe('error');
+    expect(e).toEqual(new AppError('error'));
   }
 });
 
