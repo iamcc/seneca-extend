@@ -39,7 +39,7 @@ test('handle error', async done => {
   const seneca = Seneca({ log: 'test' }).test(() => {
     done();
   });
-  seneca.use(function() {
+  seneca.use(function test() {
     this.addAsync('test', async function throwError() {
       throw new Error('error');
     });
@@ -76,9 +76,15 @@ test('actAsync', done => {
     .addAsync('test', function getFailed() {
       return { error_code: -1, error_msg: 'fake error' };
     })
-    .ready(async function() {
+    .ready(async function onReady() {
       const succData = await this.actAsync('role:test,cmd:getSuccess');
       expect(succData).toBe(true);
+
+      try {
+        await this.actAsync('role:test,cmd:getFailed');
+      } catch (e) {
+        console.log(JSON.stringify(e));
+      }
 
       done();
     });
