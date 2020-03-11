@@ -76,6 +76,9 @@ test('actAsync', done => {
     .addAsync('test', function getFailed() {
       return { error_code: -1, error_msg: 'fake error' };
     })
+    .addAsync('test', function throwAppError() {
+      throw new AppError('error msg');
+    })
     .ready(async function onReady() {
       const succData = await this.actAsync('role:test,cmd:getSuccess');
       expect(succData).toBe(true);
@@ -83,7 +86,13 @@ test('actAsync', done => {
       try {
         await this.actAsync('role:test,cmd:getFailed');
       } catch (e) {
-        console.log(JSON.stringify(e));
+        // console.log('getFailed', JSON.stringify(e));
+      }
+
+      try {
+        await this.actAsync('role:test,cmd:throwAppError');
+      } catch (e) {
+        // console.log('throwAppError', JSON.stringify(e));
       }
 
       done();
