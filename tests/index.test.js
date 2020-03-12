@@ -1,17 +1,17 @@
 const { AppError, Seneca } = require('..');
 
-async function fnOne({ msg }) {
+async function fnOne({ params }) {
   // eslint-disable-next-line no-return-await
-  return await this.actAsync('role:test,cmd:fnTwo', { msg });
+  return await this.actAsync('test', 'fnTwo', params);
 }
 
-async function fnTwo({ msg }) {
+async function fnTwo({ params }) {
   // eslint-disable-next-line no-return-await
-  return await this.actAsync('role:test,cmd:fnThree', { msg });
+  return await this.actAsync('test', 'fnThree', params);
 }
 
-async function fnThree({ msg }) {
-  return { msg };
+async function fnThree({ params }) {
+  return params;
 }
 
 function serverTestService() {
@@ -28,7 +28,7 @@ test('seneca response', async done => {
     .test(done)
     .use(serverTestService)
     .use(clientTestService);
-  const resp = await seneca.actAsync('role:test,cmd:fnOne', {
+  const resp = await seneca.actAsync('test', 'fnOne', {
     msg: 'ok'
   });
   expect(resp).toEqual({ msg: 'ok' });
@@ -49,13 +49,13 @@ test('handle error', async done => {
   });
 
   try {
-    await seneca.actAsync('role:test,cmd:throwAppError');
+    await seneca.actAsync('test', 'throwAppError');
   } catch (e) {
     expect(e).toEqual(new AppError('error'));
   }
 
   try {
-    await seneca.actAsync('role:test,cmd:throwError');
+    await seneca.actAsync('test', 'throwError');
   } catch (e) {
     expect(e).toEqual(new AppError('error'));
   }
@@ -80,17 +80,17 @@ test('actAsync', done => {
       throw new AppError('error msg');
     })
     .ready(async function onReady() {
-      const succData = await this.actAsync('role:test,cmd:getSuccess');
+      const succData = await this.actAsync('test', 'getSuccess');
       expect(succData).toBe(true);
 
       try {
-        await this.actAsync('role:test,cmd:getFailed');
+        await this.actAsync('test', 'getFailed');
       } catch (e) {
         // console.log('getFailed', JSON.stringify(e));
       }
 
       try {
-        await this.actAsync('role:test,cmd:throwAppError');
+        await this.actAsync('test', 'throwAppError');
       } catch (e) {
         // console.log('throwAppError', JSON.stringify(e));
       }
