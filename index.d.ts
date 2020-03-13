@@ -254,7 +254,8 @@ declare module "seneca-extend" {
         
     }
   
-    export = SNS;
+    export const Seneca = SNS;
+    export const AppError = import('./lib/appError')
   }
   
   
