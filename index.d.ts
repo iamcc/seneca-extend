@@ -1,3 +1,5 @@
+import AppError from './lib/appError';
+
 declare module "seneca-extend" {
 
     function SNS(options?: SNS.Options): SNS.Instance;
@@ -254,8 +256,10 @@ declare module "seneca-extend" {
         
     }
   
-    export const Seneca = SNS;
-    export const AppError = import('./lib/appError')
+    export {
+        SNS as Seneca, 
+        AppError
+    }
   }
   
   
