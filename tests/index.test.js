@@ -1,4 +1,4 @@
-const { AppError, Seneca } = require('..');
+const Seneca = require('..');
 
 async function fnOne({ params }) {
   // eslint-disable-next-line no-return-await
@@ -44,20 +44,24 @@ test('handle error', async done => {
       throw new Error('error');
     });
     this.addAsync('test', async function throwAppError() {
-      throw new AppError('error');
+      this.throwError('error');
     });
   });
 
   try {
     await seneca.actAsync('test', 'throwAppError');
   } catch (e) {
-    expect(e).toEqual(new AppError('error'));
+    expect(e).toEqual(
+      expect.objectContaining({ name: 'AppError', message: 'error' })
+    );
   }
 
   try {
     await seneca.actAsync('test', 'throwError');
   } catch (e) {
-    expect(e).toEqual(new AppError('error'));
+    expect(e).toEqual(
+      expect.objectContaining({ name: 'Error', message: 'error' })
+    );
   }
 });
 
@@ -77,7 +81,7 @@ test('actAsync', done => {
       return { error_code: -1, error_msg: 'fake error' };
     })
     .addAsync('test', function throwAppError() {
-      throw new AppError('error msg');
+      this.throwError('error msg');
     })
     .ready(async function onReady() {
       const succData = await this.actAsync('test', 'getSuccess');
