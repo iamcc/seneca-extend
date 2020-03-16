@@ -1,5 +1,3 @@
-import AppError from './lib/appError';
-
 declare module "seneca-extend" {
 
     function SNS(options?: SNS.Options): SNS.Instance;
@@ -228,6 +226,7 @@ declare module "seneca-extend" {
   
             addAsync(role: string, cmdFun: AddCmdFun): SNS.Instance;
             actAsync(role: string, cmd: string, params?: object): Promise<object>
+            throwError(msg: string, code?: number, detail?: any)
         }
   
         type AddCmdFun = (msg: object) => void;
@@ -255,11 +254,8 @@ declare module "seneca-extend" {
         }
         
     }
-  
-    export {
-        SNS as Seneca, 
-        AppError
-    }
+
+    export = SNS
   }
   
   
