@@ -5,8 +5,8 @@ test('injectKoa', () => {
     header: {
       'x-b3-traceid': 'trace-id',
       'x-b3-spanid': 'span-id',
-      'x-b3-parentspanid': 'parent-id'
-    }
+      'x-b3-parentspanid': 'parent-id',
+    },
   };
   const seneca = {};
 

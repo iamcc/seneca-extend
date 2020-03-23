@@ -24,19 +24,19 @@ function clientTestService() {
 }
 
 test('seneca response', async done => {
-  const seneca = Seneca({ log: 'test' })
+  const seneca = Seneca({ log: 'fatal' })
     .test(done)
     .use(serverTestService)
     .use(clientTestService);
   const resp = await seneca.actAsync('test', 'fnOne', {
-    msg: 'ok'
+    msg: 'ok',
   });
   expect(resp).toEqual({ msg: 'ok' });
   done();
 });
 
 test('handle error', async done => {
-  const seneca = Seneca({ log: 'test' }).test(() => {
+  const seneca = Seneca({ log: 'fatal' }).test(() => {
     done();
   });
   seneca.use(function test() {
@@ -52,7 +52,7 @@ test('handle error', async done => {
     await seneca.actAsync('test', 'throwAppError');
   } catch (e) {
     expect(e).toEqual(
-      expect.objectContaining({ name: 'AppError', message: 'error' })
+      expect.objectContaining({ name: 'AppError', message: 'error' }),
     );
   }
 
@@ -60,19 +60,19 @@ test('handle error', async done => {
     await seneca.actAsync('test', 'throwError');
   } catch (e) {
     expect(e).toEqual(
-      expect.objectContaining({ name: 'Error', message: 'error' })
+      expect.objectContaining({ name: 'Error', message: 'error' }),
     );
   }
 });
 
 test('addAsync().act is a function', () => {
   expect(
-    typeof Seneca({ log: 'test' }).addAsync('test', function test() {}).act
+    typeof Seneca({ log: 'fatal' }).addAsync('test', function test() {}).act,
   ).toBe('function');
 });
 
 test('actAsync', done => {
-  Seneca({ log: 'test' })
+  Seneca({ log: 'fatal' })
     .test(() => done())
     .addAsync('test', function getSuccess() {
       return { error_code: 0, data: true };
