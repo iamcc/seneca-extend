@@ -224,8 +224,20 @@ declare module "seneca-extend" {
   
             pin(pattern: Pattern): void;
   
+            // addAsync('role:xxx,cmd:xxx', function)
+            addAsync(pattern: string, cmdFun: AddCmdFun): SNS.Instance;
+            // addAsync({role:xxx,cmd:xxx}, function)
+            addAsync(pattern: {role: string, cmd: string}, cmdFun: AddCmdFun): SNS.Instance;
+            // addAsync(role, cmd, function)
+            addAsync(role: string, cmd: string, cmdFun: AddCmdFun): SNS.Instance;
+            // addAsync(role, function)
             addAsync(role: string, cmdFun: AddCmdFun): SNS.Instance;
+
+            // actAsync(role, cmd, params)
             actAsync(role: string, cmd: string, params?: object): Promise<any>
+            // actAsync({role, cmd, params})
+            actAsync(p: {role: string, cmd: string, params?: object}): Promise<any>
+
             throwError(msg: string, code?: number, detail?: any)
         }
   
