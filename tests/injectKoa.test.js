@@ -30,3 +30,7 @@ test('injectKoa', done => {
       done();
     });
 });
+
+test('injectHeader', () => {
+  expect(typeof injectKoa.injectHeader).toBe('function');
+});
