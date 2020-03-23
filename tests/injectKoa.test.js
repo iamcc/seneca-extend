@@ -1,6 +1,7 @@
+const Seneca = require('../lib/seneca');
 const injectKoa = require('../lib/injectKoa');
 
-test('injectKoa', () => {
+test('injectKoa', done => {
   const ctx = {
     header: {
       'x-b3-traceid': 'trace-id',
@@ -8,14 +9,24 @@ test('injectKoa', () => {
       'x-b3-parentspanid': 'parent-id',
     },
   };
-  const seneca = {};
-
-  expect.assertions(4);
-  seneca.actAsync = (role, cmd, { __tracer__, ...params }) => {
-    expect(role).toBe('role');
-    expect(cmd).toBe('cmd');
-    expect(__tracer__).toEqual(ctx.header);
-    expect(params).toEqual({ params: {} });
-  };
-  injectKoa(ctx, seneca).actAsync('role', 'cmd', { params: {} });
+  const seneca = Seneca({})
+    .test(done)
+    .addAsync('role', 'cmd', ({ role, cmd, __tracer__, params }) => {
+      return { role, cmd, __tracer__, params };
+    });
+  injectKoa(ctx, seneca)
+    .actAsync({
+      role: 'role',
+      cmd: 'cmd',
+      params: { name: 'cc' },
+    })
+    .then(out => {
+      expect(out).toEqual({
+        role: 'role',
+        cmd: 'cmd',
+        __tracer__: ctx.header,
+        params: { name: 'cc' },
+      });
+      done();
+    });
 });
