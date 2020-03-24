@@ -1,5 +1,7 @@
 const Seneca = require('..');
 
+const succRes = { error_code: 0, error_msg: 'SUCCESS' };
+
 async function fnOne({ params }) {
   // eslint-disable-next-line no-return-await
   return await this.actAsync('test', 'fnTwo', params);
@@ -31,7 +33,7 @@ test('seneca response', async done => {
   const resp = await seneca.actAsync('test', 'fnOne', {
     msg: 'ok',
   });
-  expect(resp).toEqual({ msg: 'ok' });
+  expect(resp).toEqual({ ...succRes, data: { msg: 'ok' } });
   done();
 });
 
@@ -44,24 +46,20 @@ test('handle error', async done => {
       throw new Error('error');
     });
     this.addAsync('test', async function throwAppError() {
-      this.throwError('error');
+      this.throwError('error', -99);
     });
   });
 
-  try {
-    await seneca.actAsync('test', 'throwAppError');
-  } catch (e) {
-    expect(e).toEqual(
-      expect.objectContaining({ name: 'AppError', message: 'error' }),
-    );
-  }
+  expect(await seneca.actAsync('test', 'throwAppError')).toEqual({
+    error_code: -99,
+    error_msg: 'error',
+  });
 
   try {
     await seneca.actAsync('test', 'throwError');
   } catch (e) {
-    expect(e).toEqual(
-      expect.objectContaining({ name: 'Error', message: 'error' }),
-    );
+    expect(e.orig.name).toBe('Error');
+    expect(e.orig.message).toBe('error');
   }
 });
 
@@ -75,7 +73,7 @@ test('actAsync', done => {
   Seneca({ log: 'fatal' })
     .test(() => done())
     .addAsync('test', function getSuccess() {
-      return { error_code: 0, data: true };
+      return { ...succRes, data: true };
     })
     .addAsync('test', function getFailed() {
       return { error_code: -1, error_msg: 'fake error' };
@@ -85,19 +83,12 @@ test('actAsync', done => {
     })
     .ready(async function onReady() {
       const succData = await this.actAsync('test', 'getSuccess');
-      expect(succData).toBe(true);
+      expect(succData).toEqual({ ...succRes, data: true });
 
-      try {
-        await this.actAsync('test', 'getFailed');
-      } catch (e) {
-        // console.log('getFailed', JSON.stringify(e));
-      }
-
-      try {
-        await this.actAsync('test', 'throwAppError');
-      } catch (e) {
-        // console.log('throwAppError', JSON.stringify(e));
-      }
+      expect(await this.actAsync('test', 'getFailed')).toEqual({
+        error_code: -1,
+        error_msg: 'fake error',
+      });
 
       done();
     });

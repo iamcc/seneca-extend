@@ -1,5 +1,7 @@
 const Seneca = require('../lib/seneca');
 
+const succRes = { error_code: 0, error_msg: 'SUCCESS' };
+
 test('addAsync(role, cmd, function)', done => {
   const seneca = Seneca({})
     .test(done)
@@ -90,10 +92,13 @@ test('actAsync({role, cmd, params})', done => {
     })
     .then(out => {
       expect(out).toEqual({
-        role: 'test',
-        cmd: 'test',
-        __tracer__: {},
-        params: { name: 'cc' },
+        ...succRes,
+        data: {
+          role: 'test',
+          cmd: 'test',
+          __tracer__: {},
+          params: { name: 'cc' },
+        },
       });
       done();
     });
@@ -108,10 +113,13 @@ test('actAsync(role, cmd, params)', done => {
     .actAsync('test', 'test', { __tracer__: {}, name: 'cc' })
     .then(out => {
       expect(out).toEqual({
-        role: 'test',
-        cmd: 'test',
-        __tracer__: {},
-        params: { name: 'cc' },
+        ...succRes,
+        data: {
+          role: 'test',
+          cmd: 'test',
+          __tracer__: {},
+          params: { name: 'cc' },
+        },
       });
       done();
     });
@@ -129,10 +137,13 @@ test('actAsync({role, cmd}, {params})', done => {
     )
     .then(out => {
       expect(out).toEqual({
-        role: 'test',
-        cmd: 'test',
-        __tracer__: {},
-        params: { name: 'cc' },
+        ...succRes,
+        data: {
+          role: 'test',
+          cmd: 'test',
+          __tracer__: {},
+          params: { name: 'cc' },
+        },
       });
       done();
     });
@@ -147,10 +158,13 @@ test('actAsync({role, cmd})', done => {
     .actAsync({ role: 'test', cmd: 'test' })
     .then(out => {
       expect(out).toEqual({
-        role: 'test',
-        cmd: 'test',
-        __tracer__: undefined,
-        params: {},
+        ...succRes,
+        data: {
+          role: 'test',
+          cmd: 'test',
+          __tracer__: undefined,
+          params: {},
+        },
       });
       done();
     });
@@ -165,10 +179,13 @@ test('actAsync(role, cmd)', done => {
     .actAsync('test', 'test')
     .then(out => {
       expect(out).toEqual({
-        role: 'test',
-        cmd: 'test',
-        __tracer__: undefined,
-        params: {},
+        ...succRes,
+        data: {
+          role: 'test',
+          cmd: 'test',
+          __tracer__: undefined,
+          params: {},
+        },
       });
       done();
     });
@@ -211,4 +228,23 @@ test('useAsync', done => {
           done();
         });
     });
+});
+
+test('handleResponse', async done => {
+  const seneca = Seneca({}).test(done);
+  await seneca.useAsync({
+    init: () => Promise.resolve(),
+    seneca() {
+      this.addAsync('test', function test({ params }) {
+        return { error_code: 0, error_msg: 'SUCCESS', data: params };
+      });
+    },
+  });
+  const res = await seneca.actAsync('test', 'test', { name: 'cc' });
+  expect(res).toEqual({
+    error_code: 0,
+    error_msg: 'SUCCESS',
+    data: { name: 'cc' },
+  });
+  done();
 });
