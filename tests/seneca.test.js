@@ -116,3 +116,60 @@ test('actAsync(role, cmd, params)', done => {
       done();
     });
 });
+
+test('actAsync({role, cmd}, {params})', done => {
+  Seneca({})
+    .test(done)
+    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
+      return { role, cmd, __tracer__, params };
+    })
+    .actAsync(
+      { role: 'test', cmd: 'test' },
+      { __tracer__: {}, params: { name: 'cc' } },
+    )
+    .then(out => {
+      expect(out).toEqual({
+        role: 'test',
+        cmd: 'test',
+        __tracer__: {},
+        params: { name: 'cc' },
+      });
+      done();
+    });
+});
+
+test('actAsync({role, cmd})', done => {
+  Seneca({})
+    .test(done)
+    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
+      return { role, cmd, __tracer__, params };
+    })
+    .actAsync({ role: 'test', cmd: 'test' })
+    .then(out => {
+      expect(out).toEqual({
+        role: 'test',
+        cmd: 'test',
+        __tracer__: undefined,
+        params: {},
+      });
+      done();
+    });
+});
+
+test('actAsync(role, cmd)', done => {
+  Seneca({})
+    .test(done)
+    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
+      return { role, cmd, __tracer__, params };
+    })
+    .actAsync('test', 'test')
+    .then(out => {
+      expect(out).toEqual({
+        role: 'test',
+        cmd: 'test',
+        __tracer__: undefined,
+        params: {},
+      });
+      done();
+    });
+});
