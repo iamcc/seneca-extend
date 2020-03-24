@@ -239,6 +239,7 @@ declare module "seneca-extend" {
             actAsync(p: {role: string, cmd: string, params?: object}): Promise<any>
 
             throwError(msg: string, code?: number, detail?: any)
+            useAsync(input: any, options?: any, name?: string)
         }
   
         type AddCmdFun = (msg: object) => void;

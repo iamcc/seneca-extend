@@ -173,3 +173,42 @@ test('actAsync(role, cmd)', done => {
       done();
     });
 });
+
+test('useAsync', done => {
+  const seneca = Seneca({}).test(done);
+  seneca.useAsync(function() {
+    this.addAsync('test', function test() {
+      return 'test';
+    });
+  });
+  seneca
+    .useAsync({
+      init() {
+        return Promise.resolve();
+      },
+      seneca() {
+        this.addAsync('test', function test2() {
+          return 'test2';
+        });
+      },
+    })
+    .then(() => {
+      seneca
+        .gate()
+        .act('role:test,cmd:test', (err, out) => {
+          expect(out).toEqual({
+            error_code: 0,
+            error_msg: 'SUCCESS',
+            data: 'test',
+          });
+        })
+        .act('role:test,cmd:test2', (err, out) => {
+          expect(out).toEqual({
+            error_code: 0,
+            error_msg: 'SUCCESS',
+            data: 'test2',
+          });
+          done();
+        });
+    });
+});
