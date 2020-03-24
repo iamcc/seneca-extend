@@ -23,6 +23,7 @@
   "homepage": "https://github.com/iamcc/seneca-extend#readme",
   "dependencies": {
     "@types/jest": "^25.1.4",
+    "@types/koa": "^2.11.2",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.12",
     "debug": "^4.1.1",
