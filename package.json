@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest tests"
+    "test": "jest tests",
+    "test:cov": "jest tests --coverage --collectCoverageFrom=lib/**/*.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iamcc/seneca-extend.git"
+
   },
   "keywords": [
     "seneca",
