@@ -248,3 +248,28 @@ test('handleResponse', async done => {
   });
   done();
 });
+
+test('handleData', async done => {
+  Seneca({ throwError: true })
+    .test(done)
+    .addAsync('test', 'test', () => 'fuck')
+    .actAsync('test', 'test')
+    .then(out => {
+      expect(out).toBe('fuck');
+      done();
+    });
+});
+
+test('throwAppError', async done => {
+  Seneca({ throwError: true })
+    .test(done)
+    .addAsync('test', function throwAppError() {
+      this.throwError('fake app error', -99);
+    })
+    .actAsync('test', 'throwAppError')
+    .catch(e => {
+      expect(e.name).toBe('AppError');
+      expect(e.message).toBe('fake app error');
+      done();
+    });
+});
