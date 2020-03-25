@@ -273,3 +273,31 @@ test('throwAppError', async done => {
       done();
     });
 });
+
+test('opts.modulePath', async done => {
+  const seneca = Seneca({
+    throwError: true,
+    modulePath: `${__dirname}/modules/*/api.js`,
+  }).test(done);
+  await expect(seneca.actAsync('fake', 'test')).resolves.toEqual('ok');
+  await expect(seneca.actAsync('fake', 'async')).resolves.toEqual('async');
+
+  done();
+});
+
+test('opts.services', async done => {
+  const server = Seneca({})
+    .addAsync('server.role', function test() {
+      return 'server.test';
+    })
+    .listen(8080);
+
+  Seneca({ throwError: true, services: { server: '127.0.0.1:8080' } })
+    .test(done)
+    .actAsync('server.role', 'test')
+    .then(out => {
+      expect(out).toBe('server.test');
+      server.close();
+      done();
+    });
+});

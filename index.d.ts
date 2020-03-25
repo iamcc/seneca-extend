@@ -107,6 +107,13 @@ declare module "seneca-extend" {
                 short?: boolean;
             };
             errhandler?: GlobalErrorHandler;
+
+            // if true, throw AppError when error_code !== 0, and when error_code === 0, return data without error_code
+            throwError?: boolean;
+            // ex: { service1: '127.0.0.1:8080', service2: '127.0.0.1' }, default port 80
+            services?: Object.<string, string>;
+            // for glob.sync, default `${process.env.PWD}/lib/modules/*/api.js`
+            modulePath?: string;
         }
   
         interface MinimalPattern {
