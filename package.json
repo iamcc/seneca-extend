@@ -1,6 +1,6 @@
 {
   "name": "seneca-extend",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iamcc/seneca-extend.git"
-
   },
   "keywords": [
     "seneca",
