@@ -11,8 +11,8 @@ test('injectKoa', done => {
   };
   const seneca = Seneca({})
     .test(done)
-    .addAsync('role', 'cmd', ({ role, cmd, __tracer__, params }) => {
-      return { role, cmd, __tracer__, params };
+    .addAsync('role', 'cmd', ({ __tracer__ }) => {
+      return __tracer__;
     });
   injectKoa(ctx, seneca);
   ctx
@@ -22,20 +22,12 @@ test('injectKoa', done => {
       params: { name: 'cc' },
     })
     .then(out => {
-      expect(out).toEqual({
-        error_code: 0,
-        error_msg: 'SUCCESS',
-        data: {
-          role: 'role',
-          cmd: 'cmd',
-          __tracer__: {
-            'x-b3-traceid': 'trace-id',
-            'x-b3-spanid': 'span-id',
-            'x-b3-parentspanid': 'parent-id',
-          },
-          params: { name: 'cc' },
-        },
-      });
+      expect(out.data).toEqual(
+        expect.objectContaining({
+          'x-b3-traceid': 'trace-id',
+          'x-b3-parentspanid': 'span-id',
+        }),
+      );
       done();
     });
 });

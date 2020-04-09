@@ -81,13 +81,12 @@ test('addAsync(role, function)', done => {
 test('actAsync({role, cmd, params})', done => {
   Seneca({})
     .test(done)
-    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
-      return { role, cmd, __tracer__, params };
+    .addAsync('test', function test({ role, cmd, params }) {
+      return { role, cmd, params };
     })
     .actAsync({
       role: 'test',
       cmd: 'test',
-      __tracer__: {},
       params: { name: 'cc' },
     })
     .then(out => {
@@ -96,7 +95,6 @@ test('actAsync({role, cmd, params})', done => {
         data: {
           role: 'test',
           cmd: 'test',
-          __tracer__: {},
           params: { name: 'cc' },
         },
       });
@@ -107,17 +105,16 @@ test('actAsync({role, cmd, params})', done => {
 test('actAsync(role, cmd, params)', done => {
   Seneca({})
     .test(done)
-    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
-      return { role, cmd, __tracer__, params };
+    .addAsync('test', function test({ role, cmd, params }) {
+      return { role, cmd, params };
     })
-    .actAsync('test', 'test', { __tracer__: {}, name: 'cc' })
+    .actAsync('test', 'test', { name: 'cc' })
     .then(out => {
       expect(out).toEqual({
         ...succRes,
         data: {
           role: 'test',
           cmd: 'test',
-          __tracer__: {},
           params: { name: 'cc' },
         },
       });
@@ -128,20 +125,16 @@ test('actAsync(role, cmd, params)', done => {
 test('actAsync({role, cmd}, {params})', done => {
   Seneca({})
     .test(done)
-    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
-      return { role, cmd, __tracer__, params };
+    .addAsync('test', function test({ role, cmd, params }) {
+      return { role, cmd, params };
     })
-    .actAsync(
-      { role: 'test', cmd: 'test' },
-      { __tracer__: {}, params: { name: 'cc' } },
-    )
+    .actAsync({ role: 'test', cmd: 'test' }, { params: { name: 'cc' } })
     .then(out => {
       expect(out).toEqual({
         ...succRes,
         data: {
           role: 'test',
           cmd: 'test',
-          __tracer__: {},
           params: { name: 'cc' },
         },
       });
@@ -152,8 +145,8 @@ test('actAsync({role, cmd}, {params})', done => {
 test('actAsync({role, cmd})', done => {
   Seneca({})
     .test(done)
-    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
-      return { role, cmd, __tracer__, params };
+    .addAsync('test', function test({ role, cmd, params }) {
+      return { role, cmd, params };
     })
     .actAsync({ role: 'test', cmd: 'test' })
     .then(out => {
@@ -162,7 +155,6 @@ test('actAsync({role, cmd})', done => {
         data: {
           role: 'test',
           cmd: 'test',
-          __tracer__: undefined,
           params: {},
         },
       });
@@ -173,8 +165,8 @@ test('actAsync({role, cmd})', done => {
 test('actAsync(role, cmd)', done => {
   Seneca({})
     .test(done)
-    .addAsync('test', function test({ role, cmd, __tracer__, params }) {
-      return { role, cmd, __tracer__, params };
+    .addAsync('test', function test({ role, cmd, params }) {
+      return { role, cmd, params };
     })
     .actAsync('test', 'test')
     .then(out => {
@@ -183,7 +175,6 @@ test('actAsync(role, cmd)', done => {
         data: {
           role: 'test',
           cmd: 'test',
-          __tracer__: undefined,
           params: {},
         },
       });
