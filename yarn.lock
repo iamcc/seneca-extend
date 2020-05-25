@@ -3351,6 +3351,11 @@ opentracing@^0.13.0:
   resolved "https://registry.npm.taobao.org/opentracing/download/opentracing-0.13.0.tgz#6a341442f09d7d866bc11ed03de1e3828e3d6aab"
   integrity sha1-ajQUQvCdfYZrwR7QPeHjgo49aqs=
 
+opentracing@^0.14.4:
+  version "0.14.4"
+  resolved "https://registry.npm.taobao.org/opentracing/download/opentracing-0.14.4.tgz#a113408ea740da3a90fde5b3b0011a375c2e4268"
+  integrity sha1-oRNAjqdA2jqQ/eWzsAEaN1wuQmg=
+
 optionator@^0.8.1, optionator@^0.8.3:
   version "0.8.3"
   resolved "https://registry.npm.taobao.org/optionator/download/optionator-0.8.3.tgz?cache=0&sync_timestamp=1573078174520&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Foptionator%2Fdownload%2Foptionator-0.8.3.tgz#84fa1d036fe9d3c7e21d99884b601167ec8fb495"
